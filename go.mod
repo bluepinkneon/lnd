@@ -222,6 +222,6 @@ replace github.com/btcsuite/btcd => github.com/bluepinkneon/btcd v0.24.3-0.20260
 // If you change this please also update docs/INSTALL.md and GO_VERSION in
 // Makefile (then run `make lint` to see where else it needs to be updated as
 // well).
-go 1.22.9
+go 1.23.6
 
 retract v0.0.2

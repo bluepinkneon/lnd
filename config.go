@@ -1294,10 +1294,21 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 		)
 		cfg.ActiveNetParams.Params = &chainParams
 	}
+	if cfg.Bitcoin.MutinyNet {
+		numNets++
+		cfg.ActiveNetParams = chainreg.BitcoinMutinyNetParams
+
+		// MutinyNet uses pre-configured params with 30-second blocks.
+		// No custom challenge/seeds needed as they're defined in btcd.
+		chainParams := chaincfg.CustomMutinyNetParams(
+			chaincfg.MutinyNetChallenge, nil,
+		)
+		cfg.ActiveNetParams.Params = &chainParams
+	}
 	if numNets > 1 {
-		str := "The mainnet, testnet, testnet4, regtest, simnet and " +
-			"signet params can't be used together -- choose one " +
-			"of the five"
+		str := "The mainnet, testnet, testnet4, regtest, simnet, " +
+			"signet, and mutinynet params can't be used together " +
+			"-- choose one"
 
 		return nil, mkErr(str)
 	}
@@ -1305,10 +1316,10 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 	// The target network must be provided, otherwise, we won't
 	// know how to initialize the daemon.
 	if numNets == 0 {
-		str := "either --bitcoin.mainnet, or --bitcoin.testnet, " +
+		str := "either --bitcoin.mainnet, --bitcoin.testnet, " +
 			"--bitcoin.testnet4, --bitcoin.simnet, " +
-			"--bitcoin.regtest or --bitcoin.signet must be " +
-			"specified"
+			"--bitcoin.regtest, --bitcoin.signet, or " +
+			"--bitcoin.mutinynet must be specified"
 
 		return nil, mkErr(str)
 	}
@@ -2233,7 +2244,7 @@ func extractBitcoindRPCParams(networkName, bitcoindDataDir, bitcoindConfigPath,
 	switch networkName {
 	case "mainnet":
 		chainDir = ""
-	case "regtest", "testnet3", "testnet4", "signet":
+	case "regtest", "testnet3", "testnet4", "signet", "mutinynet":
 		chainDir = networkName
 	default:
 		return "", "", "", "", fmt.Errorf("unexpected networkname %v", networkName)

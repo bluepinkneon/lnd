@@ -53,6 +53,14 @@ var BitcoinSigNetParams = BitcoinNetParams{
 	CoinType: keychain.CoinTypeTestnet,
 }
 
+// BitcoinMutinyNetParams contains parameters specific to the Mutinynet signet
+// test network, which uses 30-second blocks instead of 10-minute blocks.
+var BitcoinMutinyNetParams = BitcoinNetParams{
+	Params:   &bitcoinCfg.MutinyNetParams,
+	RPCPort:  "38332",
+	CoinType: keychain.CoinTypeTestnet,
+}
+
 // BitcoinRegTestNetParams contains parameters specific to a local bitcoin
 // regtest network.
 var BitcoinRegTestNetParams = BitcoinNetParams{
